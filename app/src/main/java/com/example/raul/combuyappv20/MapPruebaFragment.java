@@ -54,6 +54,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     private LocationRequest locationrequest;
     private boolean PermisoConcedido ;
     private MapView mapView;
+    //private static final String nombreProducto;
 
 
     private List<CombuyLocal> locales;
@@ -89,6 +90,16 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onResume() {
         super.onResume();
         Log.v(LOG_TAG, "onResume");
+        /*
+        if (nombreProducto==null){
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto vacio ", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else{
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto " + nombreProducto, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        */
 
         ObtenerPermisodeUbicacion();
         try{

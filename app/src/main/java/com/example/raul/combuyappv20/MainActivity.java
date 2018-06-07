@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchProductFragment.OnFragmentInteractionListener {
@@ -93,8 +94,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onButtonSearchPress(String nombreProducto) {
+        Toast toast = Toast.makeText(getApplicationContext(),"Llego al main " + nombreProducto, Toast.LENGTH_SHORT);
+        toast.show();
+        /*
+        MapPruebaFragment newMapPruebaFragment = new MapPruebaFragment();
+        Bundle args = new Bundle();
+        args.putString(newMapPruebaFragment.nombre);
+        */
 
     }
 }
