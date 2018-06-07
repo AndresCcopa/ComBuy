@@ -57,12 +57,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
 
     private List<CombuyLocal> locales;
+    private String LOG_TAG="FEIK";
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
 
     public MapPruebaFragment() {
         // Required empty public constructor
@@ -72,7 +68,9 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(LOG_TAG, "onCreate");
 
+        ObtenerPermisodeUbicacion();
     }
 
     @Override
@@ -82,52 +80,44 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.onResume();
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.v("COSOSOSOOSS", "String");
-                mMap = googleMap;
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-                //mMap.setMyLocationEnabled(true);
-
-                agregarMarcador(-33, 152, "XD", "Hola");
-
-
-                Log.v("COSOSOSOOSS", "COSO 2");
-                ObtenerPermisodeUbicacion();
-                Log.v("COSOSOSOOSS", "COSO 3");
-                updateLocationUI();
-                Log.v("COSOSOSOOSS", "COSO 4");
-                ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
-                Log.v("COSOSOSOOSS", "COSO 5");
-                //obtenerLocales();
-
-            }
-        });
 
         return view;
     }
 
 
-
-
-
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        Log.v(LOG_TAG, "onResume");
 
+        ObtenerPermisodeUbicacion();
+        try{
+            if(PermisoConcedido){
 
+                mapView.onResume();
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        super.onViewCreated(view, savedInstanceState);
+                try {
+                    MapsInitializer.initialize(getActivity().getApplicationContext());
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                mapView.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        mMap = googleMap;
+                        LatLng sydney = new LatLng(-34, 151);
+                        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+                        agregarMarcador(-33, 152, "XD", "Hola");
+                        updateLocationUI();
+                        ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
+                    }
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -168,14 +158,17 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
          * Consulta el permison de FINE_LOCATION, el resultado es manejado por el callback
          * onRequestPermissionsResult
          */
+        Log.v("MAPS","Antes del if pe ");
         if (ContextCompat.checkSelfPermission(this.getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             PermisoConcedido = true;
+            Log.v("MAPS","Entrando al if pe ");
         } else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            Log.v("MAPS","EN el else");
         }
     }
 
@@ -184,6 +177,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        Log.v("REQ","EN QUE PARTE ESTOY?");
         PermisoConcedido = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -191,6 +185,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     PermisoConcedido = true;
+                    Log.v("MAPS","Asignando permisos true");
+                    mapView.onResume();
                 }
             }
         }
@@ -214,6 +210,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.v(LOG_TAG, "onStart");
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(),"onStart", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private void ObtenerUbicacion() {
@@ -254,20 +258,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
