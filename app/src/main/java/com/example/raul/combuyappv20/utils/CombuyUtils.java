@@ -8,9 +8,8 @@ import java.util.List;
 
 public class CombuyUtils {
 
-    public static List<CombuyLocal> obtenerCercanos(Location ubicacionActual, int nlocales){
+    public static List<CombuyLocal> obtenerCercanos(List<CombuyLocal> lista,Location ubicacionActual, int nlocales){
 
-        List<CombuyLocal> lista=new CombuyRetrofit().getListLocal();
 
         Log.v("UTILS","ENTRA ACA?");
         int count=0;

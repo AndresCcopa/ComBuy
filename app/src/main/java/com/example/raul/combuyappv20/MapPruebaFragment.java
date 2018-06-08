@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.raul.combuyappv20.utils.CombuyLocal;
+import com.example.raul.combuyappv20.utils.CombuyRetrofit;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -55,13 +56,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     private boolean PermisoConcedido ;
     private MapView mapView;
     //private static final String nombreProducto;
-
+    String consulta;
 
     private List<CombuyLocal> locales;
     private String LOG_TAG="FEIK";
 
 
     public MapPruebaFragment() {
+
         // Required empty public constructor
     }
 
@@ -70,7 +72,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(LOG_TAG, "onCreate");
-
+        consulta=getArguments().getString("product");
         ObtenerPermisodeUbicacion();
     }
 
@@ -81,11 +83,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
         mapView = view.findViewById(R.id.mapView);
 
-
-        if(getArguments().getString("product")!=null){
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto en mapa" + getArguments().getString("product"), Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        /*
+        */
 
 
         mapView.onCreate(savedInstanceState);
@@ -138,7 +137,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
             e.printStackTrace();
         }
     }
-
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
@@ -260,8 +258,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                             Log.v("TASK","ESTA ES LA UBICACION");
                             Log.v("TASK",test(CurrentLocation));
 
-                            locales = obtenerCercanos(CurrentLocation,5);
-                            obtenerLocales();
+                            setValuesMap(consulta,CurrentLocation,5);
 
                             //locales=CombuyUtils.obtenerCercanos(CurrentLocation,2);
                         } else {
@@ -278,6 +275,18 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
             Log.e("Exception: %s", e.getMessage());
         }
 
+    }
+
+    public void setValuesMap(String consulta,Location actual,int count){
+
+        CombuyRetrofit service =new CombuyRetrofit();
+
+        if(consulta==""){
+            locales=obtenerCercanos(service.getListLocal(),actual,count);
+        }else {
+            locales = obtenerCercanos(service.getLocalesProducto(consulta), actual, count);
+        }
+        obtenerLocales();
     }
 
 }

@@ -50,12 +50,15 @@ public class MainActivity extends AppCompatActivity
         boolean FTransaction = false;
         Fragment fragmentNavbar = null;
         Fragment fragmentMap = null;
+        Bundle args = new Bundle();
+        args.putString("product", "");
 
         if (id == R.id.nav_addubication) {
             // Handle the camera action
         } else if (id == R.id.nav_searchbusiness) {
             fragmentNavbar = new SearchProductFragment();
             fragmentMap = new MapPruebaFragment();
+            fragmentMap.setArguments(args);
             FTransaction = true;
 
         } else if (id == R.id.nav_searchproduct) {
@@ -99,12 +102,18 @@ public class MainActivity extends AppCompatActivity
     public void onButtonSearchPress(String nombreProducto) {
         Toast toast = Toast.makeText(getApplicationContext(),"Llego al main " + nombreProducto, Toast.LENGTH_SHORT);
         toast.show();
+        if(nombreProducto==null){
+            nombreProducto="";
+        }
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Bundle args = new Bundle();
         args.putString("product", nombreProducto);
         MapPruebaFragment newMapPruebaFragment = new MapPruebaFragment();
         newMapPruebaFragment.setArguments(args);
-
+        transaction.replace(R.id.layout_map_container, newMapPruebaFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 }
