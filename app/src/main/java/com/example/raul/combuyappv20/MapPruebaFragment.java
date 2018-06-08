@@ -80,6 +80,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
         mapView = view.findViewById(R.id.mapView);
+
+
+        if(getArguments().getString("product")!=null){
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto en mapa" + getArguments().getString("product"), Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+
         mapView.onCreate(savedInstanceState);
 
         return view;

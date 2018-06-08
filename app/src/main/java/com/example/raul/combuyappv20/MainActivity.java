@@ -99,11 +99,12 @@ public class MainActivity extends AppCompatActivity
     public void onButtonSearchPress(String nombreProducto) {
         Toast toast = Toast.makeText(getApplicationContext(),"Llego al main " + nombreProducto, Toast.LENGTH_SHORT);
         toast.show();
-        /*
-        MapPruebaFragment newMapPruebaFragment = new MapPruebaFragment();
+
         Bundle args = new Bundle();
-        args.putString(newMapPruebaFragment.nombre);
-        */
+        args.putString("product", nombreProducto);
+        MapPruebaFragment newMapPruebaFragment = new MapPruebaFragment();
+        newMapPruebaFragment.setArguments(args);
+
 
     }
 }
