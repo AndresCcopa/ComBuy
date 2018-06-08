@@ -1,5 +1,6 @@
 package com.example.raul.combuyappv20;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,16 +11,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
+import static com.example.raul.combuyappv20.R.layout.activity_maps;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchProductFragment.OnFragmentInteractionListener {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    public String nombreProducto="";
-
+    private Fragment fragLocalMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,7 @@ public class MainActivity extends AppCompatActivity
             fragmentNavbar = new SearchProductFragment();
             fragmentMap = new MapPruebaFragment();
             fragmentMap.setArguments(args);
+            fragLocalMap=fragmentMap;
             FTransaction = true;
 
         } else if (id == R.id.nav_searchproduct) {
@@ -71,17 +78,12 @@ public class MainActivity extends AppCompatActivity
         if(FTransaction){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-
             fragmentTransaction.replace(R.id.layout_toolbar_container,fragmentNavbar);
             fragmentTransaction.replace(R.id.layout_map_container,fragmentMap).commit();
             fragmentTransaction.addToBackStack(null);
             /*
             FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
             fragmentTransaction1.replace(R.id.layout_map_container, fragmentNavbar).commit();
-            */
-
-
-            /*
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.map_container,fragmentMap).commit();
 
@@ -102,14 +104,33 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onButtonSearchPress(String nombreProducto) {
 
-        this.nombreProducto=nombreProducto;
-        if(nombreProducto==null){
-            nombreProducto="";
+
+        try {
+            if (nombreProducto == null) {
+                nombreProducto = "-";
+            }
+            Log.v("MAINACTIVITY", "El valor de nombre producto es -> |" + nombreProducto + "|");
+            Toast.makeText(this, "Javier" + nombreProducto, Toast.LENGTH_SHORT).show();
+            Bundle args = new Bundle();
+            args.putString("product", nombreProducto);
+
+            MapPruebaFragment map= (MapPruebaFragment) getSupportFragmentManager().findFragmentById(R.id.layout_map_container);
+            map.updateMap(nombreProducto);
+        }catch(Exception e)
+        {
+            e.printStackTrace();
         }
-        Toast.makeText(this, "Javier" + nombreProducto, Toast.LENGTH_SHORT).show();
-        Bundle args = new Bundle();
-        args.putString("product", nombreProducto);
+
+        }
+
+
+
+/*
+        OnMapReadyCallback map=new MapPruebaFragment;
+        map.onMapReady();
+*/
+        //FragmentTransaction ft=this.getSupportFragmentManager().beginTransaction();
 
 
     }
-}
+

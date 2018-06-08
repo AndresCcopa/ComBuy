@@ -1,12 +1,10 @@
 package com.example.raul.combuyappv20;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -27,21 +25,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import static com.example.raul.combuyappv20.utils.CombuyUtils.obtenerCercanos;
 import static com.example.raul.combuyappv20.utils.CombuyUtils.test;
 
 public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback{
-
-    private OnFragmentInteractionListener mListener;
 
     //Variables de mapas
     private static final int DEFAULT_ZOOM = 15;
@@ -58,6 +52,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     //private static final String nombreProducto;
     String consulta;
 
+    SearchProductFragment.OnFragmentInteractionListener Listener;
+
     private List<CombuyLocal> locales;
     private String LOG_TAG="FEIK";
 
@@ -71,9 +67,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(LOG_TAG, "onCreate");
         consulta=getArguments().getString("product");
-
+        Log.v(LOG_TAG, "onCreate");
         ObtenerPermisodeUbicacion();
     }
 
@@ -89,7 +84,15 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         return view;
     }
 
+    public void updateMap(String consulta){
+        this.consulta=consulta;
 
+        mMap.clear();
+        locales = new CombuyRetrofit().getLocalesProducto(consulta);
+        obtenerLocales();
+        Log.v("MAPS-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
+
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -119,8 +122,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onMapReady(GoogleMap googleMap) {
         Log.v("MAPS","EN el onmapready");
         mMap = googleMap;
-        MainActivity activity=(MainActivity) getActivity();
-        consulta=activity.nombreProducto;
+        //MainActivity activity=(MainActivity) getActivity();
+        //consulta=activity.nombreProducto;
         updateLocationUI();
         ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
         Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
