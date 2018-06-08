@@ -39,7 +39,7 @@ import java.util.concurrent.Executor;
 import static com.example.raul.combuyappv20.utils.CombuyUtils.obtenerCercanos;
 import static com.example.raul.combuyappv20.utils.CombuyUtils.test;
 
-public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback{
 
     private OnFragmentInteractionListener mListener;
 
@@ -73,6 +73,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         super.onCreate(savedInstanceState);
         Log.v(LOG_TAG, "onCreate");
         consulta=getArguments().getString("product");
+
         ObtenerPermisodeUbicacion();
     }
 
@@ -82,10 +83,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
         mapView = view.findViewById(R.id.mapView);
-
-        /*
-        */
-
 
         mapView.onCreate(savedInstanceState);
 
@@ -97,16 +94,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onResume() {
         super.onResume();
         Log.v(LOG_TAG, "onResume");
-        /*
-        if (nombreProducto==null){
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto vacio ", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        else{
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Producto " + nombreProducto, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        */
 
         ObtenerPermisodeUbicacion();
         try{
@@ -120,22 +107,23 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                mapView.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        mMap = googleMap;
-                        LatLng sydney = new LatLng(-34, 151);
-                        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                        agregarMarcador(-33, 152, "XD", "Hola");
-                        updateLocationUI();
-                        ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
-                    }
-                });
+                mapView.getMapAsync(this);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.v("MAPS","EN el onmapready");
+        mMap = googleMap;
+        MainActivity activity=(MainActivity) getActivity();
+        consulta=activity.nombreProducto;
+        updateLocationUI();
+        ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
+        Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
     }
 
     public interface OnFragmentInteractionListener {
@@ -157,17 +145,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
     private void obtenerLocales() {
         Log.v("MAPS","OBTENIENDO LOCALES");
+        mMap.clear();
         if(locales!=null){
             for(CombuyLocal i : locales){
                 agregarMarcador(i.getLatitud(),i.getLongitud(),i.getNombrenegocio(),i.getDescripcion());
             }
         }else{
             Toast.makeText(getContext(),"No se encontro ningun local u.u", Toast.LENGTH_LONG).show();
-
         }
-
-
-
     }
 
     private void ObtenerPermisodeUbicacion() {
@@ -175,17 +160,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
          * Consulta el permison de FINE_LOCATION, el resultado es manejado por el callback
          * onRequestPermissionsResult
          */
-        Log.v("MAPS","Antes del if pe ");
         if (ContextCompat.checkSelfPermission(this.getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             PermisoConcedido = true;
-            Log.v("MAPS","Entrando al if pe ");
         } else {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            Log.v("MAPS","EN el else");
         }
     }
 
@@ -194,7 +176,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        Log.v("REQ","EN QUE PARTE ESTOY?");
         PermisoConcedido = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -202,7 +183,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     PermisoConcedido = true;
-                    Log.v("MAPS","Asignando permisos true");
                     mapView.onResume();
                 }
             }
@@ -257,10 +237,9 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                                             CurrentLocation.getLongitude()), DEFAULT_ZOOM));
                             Log.v("TASK","ESTA ES LA UBICACION");
                             Log.v("TASK",test(CurrentLocation));
-
+                            Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
                             setValuesMap(consulta,CurrentLocation,5);
 
-                            //locales=CombuyUtils.obtenerCercanos(CurrentLocation,2);
                         } else {
                             Log.d("MAPS", "Current location is null. Using defaults.");
                             Log.e("MAPS", "Exception: %s", task.getException());
@@ -284,6 +263,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         if(consulta==""){
             locales=obtenerCercanos(service.getListLocal(),actual,count);
         }else {
+
             locales = obtenerCercanos(service.getLocalesProducto(consulta), actual, count);
         }
         obtenerLocales();

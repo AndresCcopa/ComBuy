@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-
+    public String nombreProducto="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +45,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         boolean FTransaction = false;
         Fragment fragmentNavbar = null;
         Fragment fragmentMap = null;
         Bundle args = new Bundle();
-        args.putString("product", "");
+        args.putString("product","");
 
         if (id == R.id.nav_addubication) {
             // Handle the camera action
@@ -100,20 +101,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onButtonSearchPress(String nombreProducto) {
-        Toast toast = Toast.makeText(getApplicationContext(),"Llego al main " + nombreProducto, Toast.LENGTH_SHORT);
-        toast.show();
+
+        this.nombreProducto=nombreProducto;
         if(nombreProducto==null){
             nombreProducto="";
         }
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Toast.makeText(this, "Javier" + nombreProducto, Toast.LENGTH_SHORT).show();
         Bundle args = new Bundle();
         args.putString("product", nombreProducto);
-        MapPruebaFragment newMapPruebaFragment = new MapPruebaFragment();
-        newMapPruebaFragment.setArguments(args);
-        transaction.replace(R.id.layout_map_container, newMapPruebaFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+
 
     }
 }
