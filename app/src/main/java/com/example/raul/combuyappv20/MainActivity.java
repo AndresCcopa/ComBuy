@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+//import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,17 +35,31 @@ public class MainActivity extends AppCompatActivity
 
         //mDrawerLayout = findViewById(R.id.drawer_layout);
 
+        /*
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
         ToolbarFragment toolbarFragment = new ToolbarFragment();
-        /*
-        fragmentTransaction2.add(R.id.body_container,toolbarFragment);
-        fragmentTransaction2.commit();
-        */
+
         fragmentTransaction2.add(R.id.layout_toolbar_container, toolbarFragment);
         fragmentTransaction2.commit();
+        */
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //Cambios añadidos para el sanguchito
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,
+                            R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
     }
 

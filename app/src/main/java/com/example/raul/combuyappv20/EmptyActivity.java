@@ -19,13 +19,9 @@ public class EmptyActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     public void nextActivityRegister(View view) {
-        Toast toast1 = Toast.makeText(getApplicationContext(),
-                "Vuelva a intentar más tarde", Toast.LENGTH_SHORT);
-        toast1.show();
-
-
+        Intent intent = new Intent(EmptyActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     public void nextActivityUserInvite(View view) {

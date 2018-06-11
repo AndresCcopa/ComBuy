@@ -1,6 +1,6 @@
 package com.example.raul.combuyappv20.utils;
 
-public class CombuyLocal {
+public class    CombuyLocal {
     private int id;
     private String nombrenegocio;
     private String ruc;

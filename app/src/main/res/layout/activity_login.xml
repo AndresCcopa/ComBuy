@@ -31,28 +31,54 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <EditText
-                            android:layout_height="wrap_content"
+                        <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
-                            android:hint="user"
-                            android:inputType="textEmailAddress"
-                            android:layout_marginBottom="10dp"
-                            android:id="@+id/etEmail"/>
-                        <EditText
-                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/colorAccent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/et_user_register"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:hint="Usuario"
+                                android:textColor="@color/colorPrimary"
+                                android:backgroundTint="@color/colorPrimaryDark"
+                                android:inputType="textCapWords"
+                                android:imeOptions="actionNext"
+                                android:padding="10dp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
-                            android:hint="password"
-                            android:inputType="textPassword"
-                            android:layout_marginBottom="10dp"
-                            android:id="@+id/etPassword"/>
+                            android:layout_centerHorizontal="true"
+                            android:textColorHint="@color/colorAccent"
+                            android:layout_height="wrap_content">
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/et_password_register"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:hint="Contraseña"
+                                android:textColor="@color/colorPrimary"
+                                android:backgroundTint="@color/colorPrimaryDark"
+                                android:inputType="textPassword"
+                                android:imeOptions="actionNext"
+                                android:padding="10dp" />
+                        </android.support.design.widget.TextInputLayout>
+
 
                         <Button
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
                             android:id="@+id/login"
                             android:text="Ingresar"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/Blanco"
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="10dp"/>
+
+
 
                     </LinearLayout>
 
