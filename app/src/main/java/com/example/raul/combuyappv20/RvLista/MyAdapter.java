@@ -32,7 +32,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
         //TODO: SET DATA :'V
         TextView des=(TextView) holder.myTv.findViewById(R.id.tv_descripcionproducto);
         TextView pre=(TextView) holder.myTv.findViewById(R.id.tv_precioproducto);
-        TextView nom=(TextView) holder.myTv.findViewById(R.id.tv_nombreproducto);
+        TextView nom=(TextView) holder.myTv.findViewById(R.id.tv_nombretienda);
         des.setText(mydata[position]);
         pre.setText(mydata[position]);
         nom.setText(mydata[position]);
