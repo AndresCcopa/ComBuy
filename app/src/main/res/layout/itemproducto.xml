@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:weightSum="4">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:src="@drawable/icon_item2"/>
+
+    <LinearLayout
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_nombretienda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre Tienda"/>
+
+        <TextView
+            android:id="@+id/tv_precioproducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Precio Producto"/>
+
+        <TextView
+            android:id="@+id/tv_descripcionproducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "/>
+    </LinearLayout>
+
+</LinearLayout>

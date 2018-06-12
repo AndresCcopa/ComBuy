@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class SearchProductFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
-    private Button btnsearchproduct;
+    private Button btnsearchproduct, btnlistaproducto;
     private EditText tvserchproduct;
     public String LOG_TAG = "ProdFragment";
 
@@ -55,7 +55,9 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
         btnsearchproduct = view.findViewById(R.id.btn_search_producto);
         tvserchproduct = view.findViewById(R.id.et_search_producto);
+        btnlistaproducto = view.findViewById(R.id.btn_lista_productos);
         btnsearchproduct.setOnClickListener(this);
+        btnlistaproducto.setOnClickListener(this);
     }
 
     @Override
@@ -66,13 +68,17 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
             toast.show();
             mListener.onButtonSearchPress(tvserchproduct.getText().toString());
         }
+        else if (v.getId() == R.id.btn_lista_productos){
+            Log.v("BTN","hay boton?");
+            mListener.onButtonListPress();
+        }
         else{
             Log.v(LOG_TAG, "NO reconoce el Onclick");
         }
     }
 
     public interface OnFragmentInteractionListener {
-
+        void onButtonListPress();
         void onButtonSearchPress(String nombreProducto);
     }
 }

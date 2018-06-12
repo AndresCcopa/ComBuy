@@ -17,6 +17,7 @@ import android.widget.Toast;
 //import android.widget.Toolbar;
 import android.support.v7.widget.Toolbar;
 
+import com.example.raul.combuyappv20.RvLista.RvFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
@@ -116,6 +117,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    @Override
+    public void onButtonListPress() {
+        RvFragment rvFragment = new RvFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.layout_map_container,rvFragment).commit();
+        fragmentTransaction.addToBackStack(null);
+
+        Log.v("BTN","entra aca!");
+
+    }
 
     @Override
     public void onButtonSearchPress(String nombreProducto) {
