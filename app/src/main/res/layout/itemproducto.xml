@@ -20,23 +20,73 @@
         android:orientation="vertical"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tv_nombretienda"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre Tienda"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tienda:"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_nombretienda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre Tienda"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio:"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_stockproducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio Producto"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock:"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_precioproducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock Producto"/>
+
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_precioproducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Precio Producto"/>
+            android:text="Descripcion:"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_descripcionproducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "/>
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."/>
     </LinearLayout>
 
 </LinearLayout>
