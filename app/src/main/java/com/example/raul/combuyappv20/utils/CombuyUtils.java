@@ -1,33 +1,27 @@
 package com.example.raul.combuyappv20.utils;
 
 import android.location.Location;
-import android.util.Log;
+
+import com.example.raul.combuyappv20.data.Local.Local;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CombuyUtils {
 
-    public static List<CombuyLocal> obtenerCercanos(List<CombuyLocal> lista,Location ubicacionActual, int nlocales){
+    public static List<Local> obtenerCercanos(List<Local> lista, Location ubicacionActual, int nlocales){
 
-
-        Log.v("UTILS","ENTRA ACA?");
         int count=0;
-
         Location aux= new Location("");
+        List<Local> retorno = new ArrayList<Local>();
 
-        List<CombuyLocal> retorno = new ArrayList<CombuyLocal>();
-
-
-        for(CombuyLocal i: lista){
-            Log.v("UTILS","ASIGNANDO DISTANCIA A LOCALES");
+        for(Local i: lista){
             aux.setLatitude(i.getLatitud());
             aux.setLongitude(i.getLongitud());
             i.setDistancia(ubicacionActual.distanceTo(aux));
             aux.reset();
         }
         while(nlocales>count){
-            Log.v("UTILS","OBTENIENDO N LOCALES MAS CERCANOS");
             retorno.add(obtenerMasCercano(lista));
             lista.remove(obtenerMasCercano(lista));
             count++;
@@ -35,21 +29,14 @@ public class CombuyUtils {
         return retorno;
     }
 
-    public static CombuyLocal obtenerMasCercano(List<CombuyLocal> locales){
-        Log.v("CERCANO","OBTENIENDO LOCAL MAS CERCANO");
-        CombuyLocal localCercano= locales.get(0);
-        for(CombuyLocal p: locales){
-
+    public static Local obtenerMasCercano(List<Local> locales){
+        Local localCercano= locales.get(0);
+        for(Local p: locales){
             if(p.getDistancia()<localCercano.getDistancia()){
                 localCercano=p;
             }
         }
         return localCercano;
-    }
-
-
-    public static String test(Location ubicacion){
-        return ubicacion.toString();
     }
 
 }

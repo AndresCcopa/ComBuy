@@ -1,4 +1,4 @@
-package com.example.raul.combuyappv20.utils;
+package com.example.raul.combuyappv20.data.Local;
 
 public class User {
 

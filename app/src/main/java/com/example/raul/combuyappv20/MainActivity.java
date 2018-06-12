@@ -120,24 +120,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onButtonSearchPress(String nombreProducto) {
 
-
         try {
-            if (nombreProducto == null) {
-                nombreProducto = "-";
-            }
-            Log.v("MAINACTIVITY", "El valor de nombre producto es -> |" + nombreProducto + "|");
-            Toast.makeText(this, "Javier" + nombreProducto, Toast.LENGTH_SHORT).show();
-            Bundle args = new Bundle();
-            args.putString("product", nombreProducto);
-
             MapPruebaFragment map= (MapPruebaFragment) getSupportFragmentManager().findFragmentById(R.id.layout_map_container);
             map.updateMap(nombreProducto);
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-
-        }
+    }
 
 
 

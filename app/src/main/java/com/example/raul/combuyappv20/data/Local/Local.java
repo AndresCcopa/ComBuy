@@ -1,6 +1,6 @@
-package com.example.raul.combuyappv20.utils;
+package com.example.raul.combuyappv20.data.Local;
 
-public class    CombuyLocal {
+public class Local {
     private int id;
     private String nombrenegocio;
     private String ruc;
@@ -15,7 +15,7 @@ public class    CombuyLocal {
 
     @Override
     public String toString() {
-        return "CombuyLocal{" +
+        return "Local{" +
                 "id=" + id +
                 ", nombrenegocio='" + nombrenegocio + '\'' +
                 ", ruc='" + ruc + '\'' +
@@ -118,7 +118,7 @@ public class    CombuyLocal {
         this.distancia = distancia;
     }
 
-    public CombuyLocal(int id, String nombrenegocio, String ruc, double latitud, double longitud, String descripcion, String telefono, String hora_inicio, String hora_fin, String idtiponegocio) {
+    public Local(int id, String nombrenegocio, String ruc, double latitud, double longitud, String descripcion, String telefono, String hora_inicio, String hora_fin, String idtiponegocio) {
         this.id = id;
         this.nombrenegocio = nombrenegocio;
         this.ruc = ruc;

@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.raul.combuyappv20.utils.CombuyLocal;
-import com.example.raul.combuyappv20.utils.CombuyRetrofit;
+import com.example.raul.combuyappv20.data.Local.Local;
+import com.example.raul.combuyappv20.data.Remota.LocalRetrofit;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -33,41 +33,32 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 
 import static com.example.raul.combuyappv20.utils.CombuyUtils.obtenerCercanos;
-import static com.example.raul.combuyappv20.utils.CombuyUtils.test;
 
 public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback{
 
-    //Variables de mapas
-    private static final int DEFAULT_ZOOM = 15;
+    private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private GoogleMap mMap;
     private Location CurrentLocation;
-    private GoogleApiClient mGoogleApiClient;
-    private static final int permiso = 0;
     private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest locationrequest;
     private boolean PermisoConcedido ;
     private MapView mapView;
-    //private static final String nombreProducto;
+
+    private LatLng currentPosition=mDefaultLocation;
     String consulta;
 
-    SearchProductFragment.OnFragmentInteractionListener Listener;
-
-    private List<CombuyLocal> locales;
+    private List<Local> locales;
     private String LOG_TAG="FEIK";
 
-
     public MapPruebaFragment() {
-
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        consulta=getArguments().getString("product");
+        consulta="";
         Log.v(LOG_TAG, "onCreate");
         ObtenerPermisodeUbicacion();
     }
@@ -78,17 +69,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
         mapView = view.findViewById(R.id.mapView);
-
         mapView.onCreate(savedInstanceState);
-
         return view;
     }
 
     public void updateMap(String consulta){
         this.consulta=consulta;
-
         mMap.clear();
-        locales = new CombuyRetrofit().getLocalesProducto(consulta);
+        locales = new LocalRetrofit().getLocalesProducto(consulta);
         obtenerLocales();
         Log.v("MAPS-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
 
@@ -101,56 +89,37 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         ObtenerPermisodeUbicacion();
         try{
             if(PermisoConcedido){
-
                 mapView.onResume();
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-                try {
-                    MapsInitializer.initialize(getActivity().getApplicationContext());
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+                //ACA hubo algo v:
                 mapView.getMapAsync(this);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.v("MAPS","EN el onmapready");
         mMap = googleMap;
-        //MainActivity activity=(MainActivity) getActivity();
-        //consulta=activity.nombreProducto;
         updateLocationUI();
         ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
-        Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
+
     }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-
-    //Metodos del MAPA
 
     private void agregarMarcador(double Lat,double Lng,String nombre,String descripcion){
-        Log.v("RETRO","AGREGANDO MARCADORES");
         mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(Lat, Lng))
                 .title(nombre)
                 .snippet(descripcion));
-
     }
 
     private void obtenerLocales() {
         Log.v("MAPS","OBTENIENDO LOCALES");
-        mMap.clear();
         if(locales!=null){
-            for(CombuyLocal i : locales){
+            mMap.clear();
+            for(Local i : locales){
                 agregarMarcador(i.getLatitud(),i.getLongitud(),i.getNombrenegocio(),i.getDescripcion());
             }
         }else{
@@ -212,14 +181,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.v(LOG_TAG, "onStart");
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(),"onStart", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     private void ObtenerUbicacion() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
@@ -238,8 +199,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(CurrentLocation.getLatitude(),
                                             CurrentLocation.getLongitude()), DEFAULT_ZOOM));
+                            currentPosition=new LatLng(CurrentLocation.getLatitude(),CurrentLocation.getLongitude());
                             Log.v("TASK","ESTA ES LA UBICACION");
-                            Log.v("TASK",test(CurrentLocation));
                             Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
                             setValuesMap(consulta,CurrentLocation,5);
 
@@ -261,7 +222,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
     public void setValuesMap(String consulta,Location actual,int count){
 
-        CombuyRetrofit service =new CombuyRetrofit();
+        LocalRetrofit service =new LocalRetrofit();
 
         if(consulta==""){
             locales=obtenerCercanos(service.getListLocal(),actual,count);
