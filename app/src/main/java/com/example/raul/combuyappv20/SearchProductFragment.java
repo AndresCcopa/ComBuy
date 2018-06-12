@@ -18,9 +18,10 @@ import android.widget.Toast;
 public class SearchProductFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
-    private Button btnsearchproduct, btnlistaproducto;
+    private Button btnsearchproduct, btnlistaproducto, btnmapa;
     private EditText tvserchproduct;
     public String LOG_TAG = "ProdFragment";
+    private String nameProduct;
 
 
     public SearchProductFragment() {
@@ -56,8 +57,12 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
         btnsearchproduct = view.findViewById(R.id.btn_search_producto);
         tvserchproduct = view.findViewById(R.id.et_search_producto);
         btnlistaproducto = view.findViewById(R.id.btn_lista_productos);
+        btnmapa = view.findViewById(R.id.btn_mapa);
+        btnmapa = view.findViewById(R.id.btn_mapa);
+        btnmapa.setOnClickListener(this);
         btnsearchproduct.setOnClickListener(this);
         btnlistaproducto.setOnClickListener(this);
+
     }
 
     @Override
@@ -67,18 +72,24 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
             Toast toast = Toast.makeText(getActivity().getApplicationContext(),tvserchproduct.getText().toString(), Toast.LENGTH_SHORT);
             toast.show();
             mListener.onButtonSearchPress(tvserchproduct.getText().toString());
+            nameProduct = tvserchproduct.getText().toString();
         }
         else if (v.getId() == R.id.btn_lista_productos){
             Log.v("BTN","hay boton?");
-            mListener.onButtonListPress();
+            mListener.onButtonListPress(nameProduct);
         }
+        else if (v.getId() == R.id.btn_mapa){
+            mListener.onButtonMapPress(nameProduct);
+        }
+
         else{
             Log.v(LOG_TAG, "NO reconoce el Onclick");
         }
     }
 
     public interface OnFragmentInteractionListener {
-        void onButtonListPress();
+        void onButtonListPress(String nombreProducto);
         void onButtonSearchPress(String nombreProducto);
+        void onButtonMapPress(String nombreProducto);
     }
 }

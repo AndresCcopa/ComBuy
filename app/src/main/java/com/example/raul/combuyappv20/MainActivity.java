@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onButtonListPress() {
+    public void onButtonListPress(String nombreProducto) {
         RvFragment rvFragment = new RvFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.layout_map_container,rvFragment).commit();
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onButtonSearchPress(String nombreProducto) {
-
         try {
             MapPruebaFragment map= (MapPruebaFragment) getSupportFragmentManager().findFragmentById(R.id.layout_map_container);
             map.updateMap(nombreProducto);
@@ -139,6 +139,18 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onButtonMapPress(String nombreProducto) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
+
+
+
+
+
     }
 
 

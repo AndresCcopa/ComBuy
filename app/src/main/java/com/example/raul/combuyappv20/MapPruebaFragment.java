@@ -233,4 +233,9 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         obtenerLocales();
     }
 
+    @Override
+    public void onDestroy() {
+        Toast.makeText(getContext(), "C MURIO", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
+    }
 }
