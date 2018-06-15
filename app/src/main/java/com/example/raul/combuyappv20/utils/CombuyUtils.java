@@ -15,16 +15,18 @@ public class CombuyUtils {
         Location aux= new Location("");
         List<Local> retorno = new ArrayList<Local>();
 
-        for(Local i: lista){
-            aux.setLatitude(i.getLatitud());
-            aux.setLongitude(i.getLongitud());
-            i.setDistancia(ubicacionActual.distanceTo(aux));
-            aux.reset();
-        }
-        while(nlocales>count){
-            retorno.add(obtenerMasCercano(lista));
-            lista.remove(obtenerMasCercano(lista));
-            count++;
+        if(lista!=null){
+            for(Local i: lista){
+                aux.setLatitude(i.getLatitud());
+                aux.setLongitude(i.getLongitud());
+                i.setDistancia(ubicacionActual.distanceTo(aux));
+                aux.reset();
+            }
+            while(nlocales>count){
+                retorno.add(obtenerMasCercano(lista));
+                lista.remove(obtenerMasCercano(lista));
+                count++;
+            }
         }
         return retorno;
     }

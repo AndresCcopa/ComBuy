@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.example.raul.combuyappv20.R;
 import com.example.raul.combuyappv20.data.Local.Item;
 import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,12 +36,13 @@ public class RvFragment extends Fragment {
     private static RvFragment instance = null;
 
 
-    private final String TAG= getClass().getSimpleName();
+    //private final String TAG= getClass().getSimpleName();
+    private final String TAG= "RV";
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private String consulta;
-
+    private List<Item> items=new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,14 +63,15 @@ public class RvFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RvFragment getInstance(String param1) {
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
         if(instance== null){
-
             instance = new RvFragment();
-            Bundle args = new Bundle();
-            args.putString(ARG_PARAM1, param1);
-            instance.setArguments(args);
 
+            instance.setArguments(args);
         }
+
         return instance;
     }
 
@@ -77,20 +81,13 @@ public class RvFragment extends Fragment {
         if (getArguments() != null) {
             consulta = getArguments().getString(ARG_PARAM1);
         }
+    }
+    public void updateList(String consulta){
+        this.consulta=consulta;
+        //preparedData();
+        mAdapter.swap(new ItemRetrofit().getListItems(consulta));
 
-
-        mLayoutManager = new LinearLayoutManager(getContext());
-        if(consulta== null)
-        {
-            mAdapter = new MyAdapter(new ItemRetrofit().getItems());
-
-        }else{
-            mAdapter = new MyAdapter(new ItemRetrofit().getListItems(consulta));
-
-        }
-
-
-
+        Log.v("Rv-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
     }
 
     @Override
@@ -103,10 +100,31 @@ public class RvFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new MyAdapter(items);
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.rv_listaproducto);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        preparedData();
+    }
+
+    public void preparedData(){
+
+        if(consulta== null || consulta.isEmpty())
+        {
+            items.clear();
+            for (Item i:new ItemRetrofit().getItems()){
+                items.add(i);
+            }
+        }else{
+            items.clear();
+            for (Item j:new ItemRetrofit().getListItems(consulta)){
+                items.add(j);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

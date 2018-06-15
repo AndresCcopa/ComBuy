@@ -3,6 +3,7 @@ package com.example.raul.combuyappv20.RvLista;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 
 import com.example.raul.combuyappv20.R;
 import com.example.raul.combuyappv20.data.Local.Item;
+import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
@@ -50,6 +53,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
         return mydata.size();
         else
             return 0;
+    }
+    public void swap(List<Item> datas)
+    {
+        if(datas == null || datas.size()==0)
+            return;
+        if (mydata != null && mydata.size()>0)
+            mydata.clear();
+        mydata.addAll(datas);
+        notifyDataSetChanged();
+
     }
 
     public class MyHolder extends RecyclerView.ViewHolder{

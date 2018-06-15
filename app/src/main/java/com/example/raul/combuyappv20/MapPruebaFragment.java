@@ -56,14 +56,15 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     }
 
     public static MapPruebaFragment getInstance(String param1) {
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+
         if(instance== null){
-
             instance = new MapPruebaFragment();
-            Bundle args = new Bundle();
-            args.putString(ARG_PARAM1, param1);
             instance.setArguments(args);
-
         }
+
         return instance;
     }
 
@@ -92,6 +93,23 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         mapView = getView().findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
+
+    }
+    public void updateMap(String consulta){
+        this.consulta=consulta;
+        mMap.clear();
+        try{
+            locales = new LocalRetrofit().getLocalesProducto(consulta);
+
+            if(locales==null){
+                Toast.makeText(getActivity(), "No se encontro ninguno U,U", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        obtenerLocales();
+        Log.v("MAPS-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
 
     }
 
@@ -241,7 +259,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
         LocalRetrofit service =new LocalRetrofit();
 
-        if(consulta==null){
+        if(consulta==null || consulta.isEmpty()){
             locales=obtenerCercanos(service.getListLocal(),actual,count);
         }else {
 
@@ -250,9 +268,4 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         obtenerLocales();
     }
 
-    @Override
-    public void onPause() {
-        Toast.makeText(getContext(), "C MURIO", Toast.LENGTH_SHORT).show();
-        super.onPause();
-    }
 }

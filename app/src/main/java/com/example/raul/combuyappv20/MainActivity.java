@@ -1,6 +1,7 @@
 package com.example.raul.combuyappv20;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private Fragment fragLocalMap;
 
-    private FragmentPagerAdapter mfragAdapter;
+    private FragmentStatePagerAdapter mfragAdapter;
     private PagerSlidingTabStrip tab;
 
     private Button buscar;
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         buscar.setOnClickListener(this);
         panel = findViewById(R.id.vp_panelinformativo);
 
+        consulta=input.getText().toString();
         mfragAdapter = new MyPagerAdapter(getSupportFragmentManager(),consulta);
         panel.setAdapter(mfragAdapter);
         panel.setPageTransformer(true,new RotateUpTransformer());
@@ -116,17 +119,28 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
 
         if(v.getId()==R.id.btn_busqueda){
-
             consulta = input.getText().toString();
-            getSupportFragmentManager().getFragments();
-            mfragAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Consulta => |"+ consulta +"|", Toast.LENGTH_SHORT).show();
 
+            MapPruebaFragment map=MapPruebaFragment.getInstance(consulta);
+            map.updateMap(consulta);
+
+             RvFragment lista=RvFragment.getInstance(consulta);
+
+             lista.updateList(consulta);
+
+            /*
+            mfragAdapter = new MyPagerAdapter(getSupportFragmentManager(),consulta);
+            mfragAdapter.notifyDataSetChanged();
+            Fragment a =getSupportFragmentManager().findFragmentById(panel.getCurrentItem());
+            a.setArguments();
+            */
         }
 
     }
 
     // Niuu
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
+    public static class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         private static int NUM_ITEMS=2;
         private FragmentManager myFragmentManager;
@@ -158,7 +172,11 @@ public class MainActivity extends AppCompatActivity
         }
         @Override
         public CharSequence getPageTitle(int posicion){
-            return "Page "+ posicion;
+            switch (posicion){
+                case 0: return "Tiendas";
+                case 1: return "Mapa";
+                default: return "Page "+ posicion;
+            }
         }
 
 
