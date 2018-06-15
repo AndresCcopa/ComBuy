@@ -1,4 +1,4 @@
-package com.example.raul.combuyappv20;
+package com.example.raul.combuyappv20.Usuario;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.example.raul.combuyappv20.EmptyActivity;
+import com.example.raul.combuyappv20.R;
+
 public class PresentationActivity extends AppCompatActivity {
 
-    private final int DURACION_SPLASH = 2500;
+    private final int DURACION_SPLASH = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,18 +1,13 @@
 package com.example.raul.combuyappv20.data.Remota;
 
 import android.util.Log;
-import android.widget.Toast;
-
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import com.example.raul.combuyappv20.data.Local.User;
 
 import java.io.IOException;
-import java.util.List;
 
-import static android.app.PendingIntent.getActivity;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class UserRetrofit {
 

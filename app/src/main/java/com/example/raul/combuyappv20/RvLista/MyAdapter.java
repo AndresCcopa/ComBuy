@@ -9,12 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.raul.combuyappv20.R;
+import com.example.raul.combuyappv20.data.Local.Item;
+
+import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
-    private String[] mydata;
+    private List<Item> mydata;
 
-    public MyAdapter(String[] mydata) {
+    public MyAdapter(List<Item> mydata) {
         this.mydata = mydata;
+
     }
 
     @NonNull
@@ -30,24 +34,29 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         //TODO: SET DATA :'V
-        TextView des=(TextView) holder.myTv.findViewById(R.id.tv_descripcionproducto);
-        TextView pre=(TextView) holder.myTv.findViewById(R.id.tv_precioproducto);
-        TextView nom=(TextView) holder.myTv.findViewById(R.id.tv_nombretienda);
-        des.setText(mydata[position]);
-        pre.setText(mydata[position]);
-        nom.setText(mydata[position]);
+        TextView des=(TextView) holder.myitem.findViewById(R.id.tv_descripcionproducto);
+        TextView pre=(TextView) holder.myitem.findViewById(R.id.tv_precioproducto);
+        TextView nom=(TextView) holder.myitem.findViewById(R.id.tv_nombretienda);
+        TextView stc=(TextView) holder.myitem.findViewById(R.id.tv_stockproducto);
+        des.setText(mydata.get(position).getIdproductolocal().getDescripcion());
+        pre.setText(String.valueOf(mydata.get(position).getPrecio()));
+        stc.setText(String.valueOf(mydata.get(position).getStock()));
+        nom.setText(mydata.get(position).getIdlocalnegocio().getNombrenegocio());
     }
 
     @Override
     public int getItemCount() {
-        return mydata.length;
+        if(mydata!=null)
+        return mydata.size();
+        else
+            return 0;
     }
 
     public class MyHolder extends RecyclerView.ViewHolder{
-        public LinearLayout myTv;
+        public LinearLayout myitem;
         public MyHolder(LinearLayout itemView) {
             super(itemView);
-            myTv=itemView;
+            myitem=itemView;
         }
     }
 }

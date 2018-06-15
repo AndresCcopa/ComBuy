@@ -68,18 +68,26 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId()== R.id.btn_search_producto){
-            Log.v(LOG_TAG, "Reconoce el onClick");
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),tvserchproduct.getText().toString(), Toast.LENGTH_SHORT);
-            toast.show();
-            mListener.onButtonSearchPress(tvserchproduct.getText().toString());
+
             nameProduct = tvserchproduct.getText().toString();
+            if(!nameProduct.isEmpty()){
+                Log.v(LOG_TAG, "Reconoce el onClick");
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),nameProduct, Toast.LENGTH_SHORT);
+                toast.show();
+                Log.v("BUS","Este es el valor de nameProducto-> |"+nameProduct+"|");
+                mListener.onButtonSearchPress(nameProduct);
+            }else{
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),"No se ingreso busqueda", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
         }
         else if (v.getId() == R.id.btn_lista_productos){
             Log.v("BTN","hay boton?");
-            mListener.onButtonListPress(nameProduct);
+            mListener.onButtonListPress();
         }
         else if (v.getId() == R.id.btn_mapa){
-            mListener.onButtonMapPress(nameProduct);
+            mListener.onButtonMapPress();
         }
 
         else{
@@ -88,8 +96,8 @@ public class SearchProductFragment extends Fragment implements View.OnClickListe
     }
 
     public interface OnFragmentInteractionListener {
-        void onButtonListPress(String nombreProducto);
+        void onButtonListPress();
         void onButtonSearchPress(String nombreProducto);
-        void onButtonMapPress(String nombreProducto);
+        void onButtonMapPress();
     }
 }

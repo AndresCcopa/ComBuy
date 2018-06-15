@@ -1,16 +1,29 @@
 package com.example.raul.combuyappv20.data.Local;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Local {
-    private int id;
-    private String nombrenegocio;
-    private String ruc;
-    private double latitud;
-    private double longitud;
-    private String descripcion;
-    private String telefono;
-    private String hora_inicio;
-    private String hora_fin;
-    private String idtiponegocio;
+    @SerializedName("id")
+    @Expose     private int id;
+    @SerializedName("nombrenegocio")
+    @Expose     private String nombrenegocio;
+    @SerializedName("ruc")
+    @Expose     private String ruc;
+    @SerializedName("latitud")
+    @Expose     private double latitud;
+    @SerializedName("longitud")
+    @Expose     private double longitud;
+    @SerializedName("descripcion")
+    @Expose     private String descripcion;
+    @SerializedName("telefono")
+    @Expose     private String telefono;
+    @SerializedName("ihora_inicio")
+    @Expose     private String hora_inicio;
+    @SerializedName("hora_fin")
+    @Expose     private String hora_fin;
+    @SerializedName("idtiponegocio")
+    @Expose     private int idtiponegocio;
     private float distancia;//Agregado para obtener la distancia entre este negocio y la posicion actual del usuario
 
     @Override
@@ -102,11 +115,11 @@ public class Local {
         this.hora_fin = hora_fin;
     }
 
-    public String getIdtiponegocio() {
+    public int getIdtiponegocio() {
         return idtiponegocio;
     }
 
-    public void setIdtiponegocio(String idtiponegocio) {
+    public void setIdtiponegocio(int idtiponegocio) {
         this.idtiponegocio = idtiponegocio;
     }
 
@@ -118,7 +131,7 @@ public class Local {
         this.distancia = distancia;
     }
 
-    public Local(int id, String nombrenegocio, String ruc, double latitud, double longitud, String descripcion, String telefono, String hora_inicio, String hora_fin, String idtiponegocio) {
+    public Local(int id, String nombrenegocio, String ruc, double latitud, double longitud, String descripcion, String telefono, String hora_inicio, String hora_fin, int idtiponegocio) {
         this.id = id;
         this.nombrenegocio = nombrenegocio;
         this.ruc = ruc;

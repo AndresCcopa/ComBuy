@@ -13,27 +13,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.raul.combuyappv20.R;
+import com.example.raul.combuyappv20.data.Local.Item;
+import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
+
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link RvFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RvFragment#newInstance} factory method to
+ * Use the @link RvFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class RvFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static RvFragment instance = null;
 
 
     private final String TAG= getClass().getSimpleName();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String[] data ={"Hola que hace","nel prro ", "ag pe crrano"};
+    private String consulta;
 
 
     // TODO: Rename and change types of parameters
@@ -51,28 +56,38 @@ public class RvFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment RvFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RvFragment newInstance(String param1, String param2) {
-        RvFragment fragment = new RvFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static RvFragment getInstance(String param1) {
+        if(instance== null){
+
+            instance = new RvFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_PARAM1, param1);
+            instance.setArguments(args);
+
+        }
+        return instance;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            consulta = getArguments().getString(ARG_PARAM1);
         }
+
+
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MyAdapter(data);
+        if(consulta== null)
+        {
+            mAdapter = new MyAdapter(new ItemRetrofit().getItems());
+
+        }else{
+            mAdapter = new MyAdapter(new ItemRetrofit().getListItems(consulta));
+
+        }
 
 
 

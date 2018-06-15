@@ -1,5 +1,6 @@
 package com.example.raul.combuyappv20.data.Remota;
 
+import com.example.raul.combuyappv20.data.Local.Item;
 import com.example.raul.combuyappv20.data.Local.Local;
 import com.example.raul.combuyappv20.data.Local.User;
 
@@ -17,12 +18,21 @@ public interface CombuyClient {
     public Call<List<Local>> getListLocales();
     @GET("buscarproducto/{producto}")
     public Call<List<Local>> getLocalesProducto(@Path("producto") String producto);
+
+
     @GET("login/{user}/{pass}")
     public Call<User> getUser(@Path("user") String user, @Path("pass") String pass);
     @POST("user/register/")
     public Call<User> createUser(@Body User user);
     @PUT("user/update/{id}")
-    public Call<User> updateUser(@Path("id") int id,@Body User user);
+    public Call<User> updateUser(@Path("id") int id, @Body User user);
     @GET("/valid/{username}")
     public Call<String> isValid(@Path("username") String username);
+
+
+    @GET("item/{nomproducto}")
+    public Call<List<Item>> getListItems(@Path("nomproducto") String nomproducto);
+    @GET("listitem/")
+    public Call<List<Item>> getTotalItems();
+
 }

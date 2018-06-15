@@ -1,7 +1,9 @@
-package com.example.raul.combuyappv20;
+package com.example.raul.combuyappv20.Usuario;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.raul.combuyappv20.R;
 
 public class LoginActivity extends AppCompatActivity {
 

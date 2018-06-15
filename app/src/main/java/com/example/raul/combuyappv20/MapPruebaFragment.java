@@ -2,9 +2,9 @@ package com.example.raul.combuyappv20;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,14 +16,11 @@ import android.widget.Toast;
 
 import com.example.raul.combuyappv20.data.Local.Local;
 import com.example.raul.combuyappv20.data.Remota.LocalRetrofit;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,8 +33,9 @@ import static com.example.raul.combuyappv20.utils.CombuyUtils.obtenerCercanos;
 
 public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback{
 
-    private static final int DEFAULT_ZOOM = 17;
+    private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static MapPruebaFragment instance=null;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private GoogleMap mMap;
     private Location CurrentLocation;
@@ -45,8 +43,10 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     private boolean PermisoConcedido ;
     private MapView mapView;
 
+    private static final String ARG_PARAM1 = "param1";
+
     private LatLng currentPosition=mDefaultLocation;
-    String consulta;
+    private String consulta;
 
     private List<Local> locales;
     private String LOG_TAG="FEIK";
@@ -55,32 +55,46 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         // Required empty public constructor
     }
 
+    public static MapPruebaFragment getInstance(String param1) {
+        if(instance== null){
+
+            instance = new MapPruebaFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_PARAM1, param1);
+            instance.setArguments(args);
+
+        }
+        return instance;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        consulta="";
         Log.v(LOG_TAG, "onCreate");
-        ObtenerPermisodeUbicacion();
+        //ObtenerPermisodeUbicacion();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (getArguments() != null) {
+            consulta = getArguments().getString(ARG_PARAM1);
+        }
         View view = inflater.inflate(R.layout.fragment_map_prueba, container, false);
-        mapView = view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
+
         return view;
     }
 
-    public void updateMap(String consulta){
-        this.consulta=consulta;
-        mMap.clear();
-        locales = new LocalRetrofit().getLocalesProducto(consulta);
-        obtenerLocales();
-        Log.v("MAPS-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mapView = getView().findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -120,7 +134,10 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         if(locales!=null){
             mMap.clear();
             for(Local i : locales){
-                agregarMarcador(i.getLatitud(),i.getLongitud(),i.getNombrenegocio(),i.getDescripcion());
+                agregarMarcador(i.getLatitud(),
+                                i.getLongitud(),
+                                i.getNombrenegocio(),
+                                i.getDescripcion());
             }
         }else{
             Toast.makeText(getContext(),"No se encontro ningun local u.u", Toast.LENGTH_LONG).show();
@@ -155,7 +172,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     PermisoConcedido = true;
-                    mapView.onResume();
+                    //mapView.onResume();
                 }
             }
         }
@@ -224,7 +241,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
         LocalRetrofit service =new LocalRetrofit();
 
-        if(consulta==""){
+        if(consulta==null){
             locales=obtenerCercanos(service.getListLocal(),actual,count);
         }else {
 
@@ -234,8 +251,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         Toast.makeText(getContext(), "C MURIO", Toast.LENGTH_SHORT).show();
-        super.onDestroy();
+        super.onPause();
     }
 }
