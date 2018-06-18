@@ -18,7 +18,6 @@ public class LocalRetrofit {
 
         api= new Api().getRetrofit();
         listLocal = null;
-
     }
 
     public List<Local> getListLocal(){

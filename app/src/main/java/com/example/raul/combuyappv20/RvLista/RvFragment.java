@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.raul.combuyappv20.MainActivity;
 import com.example.raul.combuyappv20.R;
 import com.example.raul.combuyappv20.data.Local.Item;
 import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
@@ -48,6 +50,8 @@ public class RvFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    List<Item> defList;
+
     private OnFragmentInteractionListener mListener;
 
     public RvFragment() {
@@ -68,10 +72,9 @@ public class RvFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         if(instance== null){
             instance = new RvFragment();
-
-            instance.setArguments(args);
         }
-
+        instance.setArguments(args);
+        Log.v("RV",param1);
         return instance;
     }
 
@@ -82,11 +85,11 @@ public class RvFragment extends Fragment {
             consulta = getArguments().getString(ARG_PARAM1);
         }
     }
-    public void updateList(String consulta){
-        this.consulta=consulta;
-        //preparedData();
-        mAdapter.swap(new ItemRetrofit().getListItems(consulta));
+    public void updateList(List<Item> reData){
 
+        //preparedData();
+        mAdapter.swap(reData);
+        Toast.makeText(getActivity(), "Data Update", Toast.LENGTH_SHORT).show();
         Log.v("Rv-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
     }
 
@@ -100,6 +103,7 @@ public class RvFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        defList = new ItemRetrofit().getItems();
 
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new MyAdapter(items);
@@ -115,13 +119,8 @@ public class RvFragment extends Fragment {
         if(consulta== null || consulta.isEmpty())
         {
             items.clear();
-            for (Item i:new ItemRetrofit().getItems()){
+            for (Item i: defList){
                 items.add(i);
-            }
-        }else{
-            items.clear();
-            for (Item j:new ItemRetrofit().getListItems(consulta)){
-                items.add(j);
             }
         }
         mAdapter.notifyDataSetChanged();

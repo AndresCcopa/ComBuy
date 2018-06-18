@@ -29,9 +29,12 @@ import android.support.v7.widget.Toolbar;
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.raul.combuyappv20.RvLista.RvFragment;
+import com.example.raul.combuyappv20.data.Local.Item;
+import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -59,16 +62,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //Cambios añadidos para el sanguchito
-/*
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,
-                            R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-*/
 
         input = findViewById(R.id.et_input);
         buscar= findViewById(R.id.btn_busqueda);
@@ -76,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         panel = findViewById(R.id.vp_panelinformativo);
 
         consulta=input.getText().toString();
-        mfragAdapter = new MyPagerAdapter(getSupportFragmentManager(),consulta);
+        mfragAdapter = new MyPagerAdapter(getSupportFragmentManager());
         panel.setAdapter(mfragAdapter);
         panel.setPageTransformer(true,new RotateUpTransformer());
 
@@ -84,9 +77,6 @@ public class MainActivity extends AppCompatActivity
         tab.setShouldExpand(true);
         tab.setViewPager(panel);
         tab.setTextSize(50);
-
-    }
-    public void setInfo(){
 
     }
 
@@ -112,60 +102,46 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);*/
         return true;
     }
-
-
-
     @Override
     public void onClick(View v) {
 
         if(v.getId()==R.id.btn_busqueda){
             consulta = input.getText().toString();
-            Toast.makeText(this, "Consulta => |"+ consulta +"|", Toast.LENGTH_SHORT).show();
 
-            MapPruebaFragment map=MapPruebaFragment.getInstance(consulta);
-            map.updateMap(consulta);
+            if(consulta.equals("") || consulta==null){
+                Toast.makeText(this, "No se ingreso busqueda uwu", Toast.LENGTH_SHORT).show();
+            }else {
+                List<Item> Data=new ItemRetrofit().getListItems(consulta);
 
-             RvFragment lista=RvFragment.getInstance(consulta);
-
-             lista.updateList(consulta);
-
-            /*
-            mfragAdapter = new MyPagerAdapter(getSupportFragmentManager(),consulta);
-            mfragAdapter.notifyDataSetChanged();
-            Fragment a =getSupportFragmentManager().findFragmentById(panel.getCurrentItem());
-            a.setArguments();
-            */
+                MapPruebaFragment map = MapPruebaFragment.getInstance(consulta);
+                map.updateMap(Data);
+                RvFragment lista=RvFragment.getInstance(consulta);
+                lista.updateList(Data);
+            }
         }
-
     }
-
     // Niuu
     public static class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         private static int NUM_ITEMS=2;
         private FragmentManager myFragmentManager;
         private Map<Integer, String> myTags;
-        private String consulta;
 
-        public MyPagerAdapter(FragmentManager fragmentManager,String consulta) {
+        public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             myFragmentManager = fragmentManager;
-            this.consulta = consulta;
         }
-
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return RvFragment.getInstance(consulta);
+                    return RvFragment.getInstance("");
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return MapPruebaFragment.getInstance(consulta);
+                    return MapPruebaFragment.getInstance("");
                 default:
                     return null;
             }
         }
-
-
         @Override
         public int getCount() {
             return NUM_ITEMS;
@@ -178,11 +154,5 @@ public class MainActivity extends AppCompatActivity
                 default: return "Page "+ posicion;
             }
         }
-
-
-
     }
-
-
 }
-

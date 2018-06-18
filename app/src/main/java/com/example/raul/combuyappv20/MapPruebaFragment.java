@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.raul.combuyappv20.data.Local.Item;
 import com.example.raul.combuyappv20.data.Local.Local;
 import com.example.raul.combuyappv20.data.Remota.LocalRetrofit;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,13 +28,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.raul.combuyappv20.utils.CombuyUtils.obtenerCercanos;
 
 public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback{
 
-    private static final int DEFAULT_ZOOM = 15;
+    private static final int DEFAULT_ZOOM = 10;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static MapPruebaFragment instance=null;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
@@ -45,10 +46,12 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
     private static final String ARG_PARAM1 = "param1";
 
-    private LatLng currentPosition=mDefaultLocation;
+    private LatLng pastPosition = null;
+    private LatLng currentPosition = null;
     private String consulta;
 
-    private List<Local> locales;
+    private List<Local> locales=new ArrayList<Local>();
+    private List<Local> defLocales;
     private String LOG_TAG="FEIK";
 
     public MapPruebaFragment() {
@@ -62,9 +65,8 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
         if(instance== null){
             instance = new MapPruebaFragment();
-            instance.setArguments(args);
         }
-
+        instance.setArguments(args);
         return instance;
     }
 
@@ -72,7 +74,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(LOG_TAG, "onCreate");
-        //ObtenerPermisodeUbicacion();
     }
 
     @Override
@@ -92,36 +93,30 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         super.onViewCreated(view, savedInstanceState);
         mapView = getView().findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-
-
+        ObtenerPermisodeUbicacion();
+        defLocales = new LocalRetrofit().getListLocal();
     }
-    public void updateMap(String consulta){
-        this.consulta=consulta;
-        mMap.clear();
-        try{
-            locales = new LocalRetrofit().getLocalesProducto(consulta);
+    public void updateMap(List<Item> data){
 
-            if(locales==null){
-                Toast.makeText(getActivity(), "No se encontro ninguno U,U", Toast.LENGTH_SHORT).show();
+        if(data == null){
+            Toast.makeText(getActivity(), "No se encontro el producto U,U", Toast.LENGTH_SHORT).show();
+        }else{
+            locales.clear();
+            for(Item i:data){
+                locales.add(i.getIdlocalnegocio());
             }
-        }catch (Exception e){
-            e.printStackTrace();
+            agregarCercanos(20);
         }
-
-        obtenerLocales();
         Log.v("MAPS-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.v(LOG_TAG, "onResume");
-
-        ObtenerPermisodeUbicacion();
         try{
             if(PermisoConcedido){
-                mapView.onResume();
+                mapView.onResume();//<--
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                 //ACA hubo algo v:
                 mapView.getMapAsync(this);
@@ -136,8 +131,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         Log.v("MAPS","EN el onmapready");
         mMap = googleMap;
         updateLocationUI();
-        ObtenerUbicacion(); // Obtiene Ubicacion del dispositivo y coloca la posicion en el mapa
-
+        ObtenerUbicacion();
     }
 
     private void agregarMarcador(double Lat,double Lng,String nombre,String descripcion){
@@ -147,18 +141,18 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 .snippet(descripcion));
     }
 
-    private void obtenerLocales() {
+    private void agregarLocales(List<Local> lista) {
         Log.v("MAPS","OBTENIENDO LOCALES");
-        if(locales!=null){
+        if(lista!=null){
             mMap.clear();
-            for(Local i : locales){
-                agregarMarcador(i.getLatitud(),
-                                i.getLongitud(),
-                                i.getNombrenegocio(),
-                                i.getDescripcion());
+            for(Local i : lista){
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(i.getLatitud(), i.getLongitud()))
+                        .title(i.getNombrenegocio())
+                        .snippet(i.getDescripcion()));
             }
         }else{
-            Toast.makeText(getContext(),"No se encontro ningun local u.u", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"No locales que mostrar u.u", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -177,7 +171,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -231,13 +224,19 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             CurrentLocation = task.getResult();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(CurrentLocation.getLatitude(),
-                                            CurrentLocation.getLongitude()), DEFAULT_ZOOM));
                             currentPosition=new LatLng(CurrentLocation.getLatitude(),CurrentLocation.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    currentPosition, DEFAULT_ZOOM));
+
+
+                            if(currentPosition != pastPosition){
+                                pastPosition = currentPosition;
+                                agregarCercanos(20);
+                            }
+
                             Log.v("TASK","ESTA ES LA UBICACION");
                             Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
-                            setValuesMap(consulta,CurrentLocation,5);
+                            //setValuesMap(consulta,CurrentLocation,5);
 
                         } else {
                             Log.d("MAPS", "Current location is null. Using defaults.");
@@ -252,20 +251,43 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
-
     }
+    public void agregarCercanos(int nlocales){
 
-    public void setValuesMap(String consulta,Location actual,int count){
-
-        LocalRetrofit service =new LocalRetrofit();
-
-        if(consulta==null || consulta.isEmpty()){
-            locales=obtenerCercanos(service.getListLocal(),actual,count);
-        }else {
-
-            locales = obtenerCercanos(service.getLocalesProducto(consulta), actual, count);
+        int count=0;
+        List<Local> lista = defLocales;
+        if(!locales.isEmpty()){
+            lista = locales;
         }
-        obtenerLocales();
-    }
 
+        Location aux= new Location("");
+
+        List<Local> retorno = new ArrayList<Local>();
+
+        if(lista!=null && CurrentLocation != null){
+            for(Local i: lista){
+                aux.setLatitude(i.getLatitud());
+                aux.setLongitude(i.getLongitud());
+                i.setDistancia(CurrentLocation.distanceTo(aux));
+                aux.reset();
+            }
+            while(nlocales>count && !lista.isEmpty()){
+                retorno.add(obtenerMasCercano(lista));
+                lista.remove(obtenerMasCercano(lista));
+                count++;
+            }
+        }else {
+            Toast.makeText(getContext(), "Lista o Localizacion nula UwU ", Toast.LENGTH_SHORT).show();
+        }
+        agregarLocales(retorno);
+    }
+    public Local obtenerMasCercano(List<Local> locales){
+        Local localCercano= locales.get(0);
+        for(Local p: locales){
+            if(p.getDistancia()<localCercano.getDistancia()){
+                localCercano=p;
+            }
+        }
+        return localCercano;
+    }
 }
