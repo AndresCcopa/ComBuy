@@ -1,5 +1,8 @@
 package com.example.raul.combuyappv20;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -73,6 +76,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ObtenerPermisodeUbicacion();
         Log.v(LOG_TAG, "onCreate");
     }
 
@@ -93,7 +97,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         super.onViewCreated(view, savedInstanceState);
         mapView = getView().findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        ObtenerPermisodeUbicacion();
         defLocales = new LocalRetrofit().getListLocal();
     }
     public void updateMap(List<Item> data){
@@ -134,13 +137,6 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         ObtenerUbicacion();
     }
 
-    private void agregarMarcador(double Lat,double Lng,String nombre,String descripcion){
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(Lat, Lng))
-                .title(nombre)
-                .snippet(descripcion));
-    }
-
     private void agregarLocales(List<Local> lista) {
         Log.v("MAPS","OBTENIENDO LOCALES");
         if(lista!=null){
@@ -166,9 +162,21 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 == PackageManager.PERMISSION_GRANTED) {
             PermisoConcedido = true;
         } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Habilitar GPS")
+                        .setMessage("Se requieren permisos de gps")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
         }
     }
 
@@ -279,6 +287,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
         }else {
             Toast.makeText(getContext(), "Lista o Localizacion nula UwU ", Toast.LENGTH_SHORT).show();
         }
+        locales = retorno;
         agregarLocales(retorno);
     }
     public Local obtenerMasCercano(List<Local> locales){

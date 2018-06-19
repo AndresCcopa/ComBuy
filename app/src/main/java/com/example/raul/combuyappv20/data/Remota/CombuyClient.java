@@ -15,24 +15,24 @@ import retrofit2.http.Path;
 
 public interface CombuyClient {
     @GET("localnegocio/")
-    public Call<List<Local>> getListLocales();
+    Call<List<Local>> getListLocales();
     @GET("buscarproducto/{producto}")
-    public Call<List<Local>> getLocalesProducto(@Path("producto") String producto);
+    Call<List<Local>> getLocalesProducto(@Path("producto") String producto);
 
 
     @GET("login/{user}/{pass}")
-    public Call<User> getUser(@Path("user") String user, @Path("pass") String pass);
+    Call<User> getUser(@Path("user") String user, @Path("pass") String pass);
     @POST("user/register/")
-    public Call<User> createUser(@Body User user);
+    Call<User> createUser(@Body User user);
     @PUT("user/update/{id}")
-    public Call<User> updateUser(@Path("id") int id, @Body User user);
+    Call<User> updateUser(@Path("id") int id, @Body User user);
     @GET("/valid/{username}")
-    public Call<String> isValid(@Path("username") String username);
+    Call<String> isValid(@Path("username") String username);
 
 
     @GET("item/{nomproducto}")
-    public Call<List<Item>> getListItems(@Path("nomproducto") String nomproducto);
+    Call<List<Item>> getListItems(@Path("nomproducto") String nomproducto);
     @GET("listitem/")
-    public Call<List<Item>> getTotalItems();
+    Call<List<Item>> getTotalItems();
 
 }

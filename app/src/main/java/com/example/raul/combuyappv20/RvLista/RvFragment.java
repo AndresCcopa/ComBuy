@@ -87,10 +87,8 @@ public class RvFragment extends Fragment {
     }
     public void updateList(List<Item> reData){
 
-        //preparedData();
         mAdapter.swap(reData);
         Toast.makeText(getActivity(), "Data Update", Toast.LENGTH_SHORT).show();
-        Log.v("Rv-Update","Este es el valor de la variable consulta -> |"+consulta+"|");
     }
 
     @Override
@@ -114,15 +112,19 @@ public class RvFragment extends Fragment {
         preparedData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     public void preparedData(){
 
-        if(consulta== null || consulta.isEmpty())
-        {
-            items.clear();
-            for (Item i: defList){
-                items.add(i);
-            }
+        items.clear();
+        for (Item i: defList){
+            items.add(i);
         }
+
         mAdapter.notifyDataSetChanged();
     }
 
