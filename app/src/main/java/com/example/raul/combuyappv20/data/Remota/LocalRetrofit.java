@@ -26,9 +26,9 @@ public class LocalRetrofit {
             Response<List<Local>> response=callsync.execute();
             listLocal=response.body();
             if(response.code()==200){
-                Log.v("RETRO","Response Satisfed!");
+                Log.v("RETRO1","Response Satisfed!");
             }else{
-                Log.v("RETRO","Failed U.U");
+                Log.v("RETRO2","Failed U.U");
             }
 
         } catch (IOException e) {
@@ -43,9 +43,9 @@ public class LocalRetrofit {
             Response<List<Local>> response=callsync.execute();
             listLocal=response.body();
             if(response.code()==200){
-                Log.v("RETRO","Response Satisfed!");
+                Log.v("RETRO3","Response Satisfed!");
             }else{
-                Log.v("RETRO","Failed U.U");
+                Log.v("RETRO4","Failed U.U");
             }
 
         } catch (IOException e) {

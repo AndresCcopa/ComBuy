@@ -19,7 +19,16 @@ public interface CombuyClient {
     @GET("buscarproducto/{producto}")
     Call<List<Local>> getLocalesProducto(@Path("producto") String producto);
 
+    @GET("buscarnegocio/{negocio}")
+    Call<List<Local>> getLocales(@Path("negocio") String negocio);
 
+
+    @GET("item/{nomproducto}")
+    Call<List<Item>> getListItems(@Path("nomproducto") String nomproducto);
+    @GET("listitem/")
+    Call<List<Item>> getTotalItems();
+
+/*
     @GET("login/{user}/{pass}")
     Call<User> getUser(@Path("user") String user, @Path("pass") String pass);
     @POST("user/register/")
@@ -28,11 +37,5 @@ public interface CombuyClient {
     Call<User> updateUser(@Path("id") int id, @Body User user);
     @GET("/valid/{username}")
     Call<String> isValid(@Path("username") String username);
-
-
-    @GET("item/{nomproducto}")
-    Call<List<Item>> getListItems(@Path("nomproducto") String nomproducto);
-    @GET("listitem/")
-    Call<List<Item>> getTotalItems();
-
+*/
 }

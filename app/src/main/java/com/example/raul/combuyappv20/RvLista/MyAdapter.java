@@ -50,7 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
     @Override
     public int getItemCount() {
         if(mydata!=null)
-        return mydata.size();
+            return mydata.size();
         else
             return 0;
     }
@@ -58,8 +58,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder>{
     {
         if(datas == null || datas.size()==0)
             return;
-        if (mydata != null && mydata.size()>0)
+        if (mydata.size()>0)
+        {
             mydata.clear();
+        }
         mydata.addAll(datas);
         notifyDataSetChanged();
 

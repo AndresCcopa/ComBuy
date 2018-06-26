@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.raul.combuyappv20.Usuario.LoginActivity;
 import com.example.raul.combuyappv20.Usuario.RegisterActivity;
@@ -17,13 +18,11 @@ public class EmptyActivity extends AppCompatActivity {
     }
 
     public void nextActivityLog(View view) {
-        Intent intent = new Intent(EmptyActivity.this,LoginActivity.class);
-        startActivity(intent);
+        Toast.makeText(this, "En mantenimiento ", Toast.LENGTH_LONG).show();
     }
 
     public void nextActivityRegister(View view) {
-        Intent intent = new Intent(EmptyActivity.this, RegisterActivity.class);
-        startActivity(intent);
+        Toast.makeText(this, "En mantenimiento ", Toast.LENGTH_LONG).show();
     }
 
     public void nextActivityUserInvite(View view) {

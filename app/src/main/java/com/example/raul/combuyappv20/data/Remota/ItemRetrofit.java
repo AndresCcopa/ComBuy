@@ -26,9 +26,9 @@ public class ItemRetrofit {
             Response<List<Item>> response=callsyn.execute();
             body=response.body();
             if(response.code()==200){
-                Log.v("RETRO","Response Satisfed!");
+                Log.v("RETRO5","Response Satisfed!");
             }else{
-                Log.v("RETRO","Failed U.U");
+                Log.v("RETRO6","Failed U.U");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,9 +42,9 @@ public class ItemRetrofit {
             Response<List<Item>> response=callsyn.execute();
             body=response.body();
             if(response.code()==200){
-                Log.v("RETRO","Response Satisfed!");
+                Log.v("RETRO7","Response Satisfed!");
             }else{
-                Log.v("RETRO","Failed U.U");
+                Log.v("RETRO8","Failed U.U");
             }
         } catch (IOException e) {
             e.printStackTrace();

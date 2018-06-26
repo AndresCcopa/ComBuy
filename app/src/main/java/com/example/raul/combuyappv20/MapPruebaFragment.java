@@ -131,14 +131,14 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.v("MAPS","EN el onmapready");
+        Log.v("MAPSReady","EN el onmapready");
         mMap = googleMap;
         updateLocationUI();
         ObtenerUbicacion();
     }
 
     private void agregarLocales(List<Local> lista) {
-        Log.v("MAPS","OBTENIENDO LOCALES");
+        Log.v("MAPSALocales","OBTENIENDO LOCALES");
         if(lista!=null){
             mMap.clear();
             for(Local i : lista){
@@ -193,6 +193,10 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                     PermisoConcedido = true;
                     //mapView.onResume();
                 }
+                break;
+            }
+            default:{
+                Toast.makeText(getContext(), "Permission Declined uu", Toast.LENGTH_SHORT).show();
             }
         }
         updateLocationUI();
@@ -213,7 +217,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 ObtenerPermisodeUbicacion();
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+            Log.e("ExceptionUpUI: %s", e.getMessage());
         }
     }
 
@@ -242,13 +246,13 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                                 agregarCercanos(20);
                             }
 
-                            Log.v("TASK","ESTA ES LA UBICACION");
-                            Log.v("MAPS","Este es el valor de la variable consulta -> |"+consulta+"|");
+                            Log.v("TASK1","ESTA ES LA UBICACION");
+                            Log.v("MAPSconsulta","Este es el valor de la variable consulta -> |"+consulta+"|");
                             //setValuesMap(consulta,CurrentLocation,5);
 
                         } else {
-                            Log.d("MAPS", "Current location is null. Using defaults.");
-                            Log.e("MAPS", "Exception: %s", task.getException());
+                            Log.d("MAPScurrentLocation", "Current location is null. Using defaults.");
+                            Log.e("MAPSExcept", "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -257,7 +261,7 @@ public class MapPruebaFragment extends Fragment implements ActivityCompat.OnRequ
                 });
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+            Log.e("ExceptionUbicacion: %s", e.getMessage());
         }
     }
     public void agregarCercanos(int nlocales){
