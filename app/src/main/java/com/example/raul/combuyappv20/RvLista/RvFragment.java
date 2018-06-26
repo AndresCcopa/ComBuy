@@ -1,7 +1,5 @@
 package com.example.raul.combuyappv20.RvLista;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.raul.combuyappv20.MainActivity;
 import com.example.raul.combuyappv20.R;
 import com.example.raul.combuyappv20.data.Local.Item;
 import com.example.raul.combuyappv20.data.Remota.ItemRetrofit;
@@ -23,14 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RvFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the @link RvFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RvFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,20 +41,11 @@ public class RvFragment extends Fragment {
 
     List<Item> defList;
 
-    private OnFragmentInteractionListener mListener;
-
     public RvFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment RvFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static RvFragment getInstance(String param1) {
 
         Bundle args = new Bundle();
@@ -126,17 +106,5 @@ public class RvFragment extends Fragment {
         }
 
         mAdapter.notifyDataSetChanged();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
